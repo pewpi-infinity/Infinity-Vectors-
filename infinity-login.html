@@ -141,7 +141,6 @@
     <div style="font-size:.6rem; opacity:.7;">Status: <span id="login-status">Guest</span></div>
   </header>
   <main>
-    <!-- LOGIN SIDE -->
     <section class="card login-card">
       <h2>Sign in to Infinity</h2>
       <p style="font-size:.6rem; opacity:.7;">This writes your identity to <code>localStorage.infinityUser</code> so the portal can read it.</p>
@@ -151,12 +150,9 @@
       <input id="email" type="email" placeholder="you@example.com" />
       <button id="login-btn">Sign In</button>
       <button id="logout-btn" class="muted-link" style="margin-top:.3rem;">Sign Out</button>
-
       <h3 style="font-size:.6rem; margin-top:.7rem;">Quick links</h3>
       <button onclick="window.location.href='infinity-portal-unified.html'" class="muted-link" style="width:max-content;">Go to Portal</button>
     </section>
-
-    <!-- AI SIDE -->
     <section class="card ai-card">
       <h2>AI → AI pewpi guide</h2>
       <div class="ai-log" id="ai-log">
@@ -172,8 +168,6 @@
     </section>
   </main>
   <footer>Powered by Infinity – The Lending Giant</footer>
-
-  <!-- shared auth (inline so this file is stand-alone) -->
   <script>
     (function () {
       const STORAGE_KEY = "infinityUser";
@@ -196,12 +190,10 @@
       window.infinityAuth = auth;
     })();
   </script>
-
   <script>
     const statusEl = document.getElementById("login-status");
     const userNow = window.infinityAuth.getUser();
     if (userNow) statusEl.textContent = userNow.name || userNow.email || "Infinity user";
-
     document.getElementById("login-btn").addEventListener("click", () => {
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
@@ -214,31 +206,25 @@
       statusEl.textContent = userObj.name || userObj.email || "Infinity user";
       logAI("pewpi", "stored you in infinity. open the portal and it will see you.");
     });
-
     document.getElementById("logout-btn").addEventListener("click", () => {
       window.infinityAuth.clear();
       statusEl.textContent = "Guest";
       logAI("pewpi", "cleared this browser from infinity.");
     });
-
-    // AI chat
     const aiLog = document.getElementById("ai-log");
     const aiInput = document.getElementById("ai-input");
     const aiSend = document.getElementById("ai-send");
-
     function logAI(who, text) {
       const p = document.createElement("p");
       p.innerHTML = `<strong>${who}:</strong> ${text}`;
       aiLog.appendChild(p);
       aiLog.scrollTop = aiLog.scrollHeight;
     }
-
     aiSend.addEventListener("click", () => {
       const text = aiInput.value.trim();
       if (!text) return;
       logAI("you", text);
       aiInput.value = "";
-      // simple AI logic
       if (/name is/i.test(text)) {
         const name = text.split(/name is/i)[1].trim();
         window.infinityAuth.setUser({ name, ts: Date.now(), source: "ai-pewpi" });
